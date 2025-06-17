@@ -1,1 +1,21 @@
+def rule_based_chatbot():
+    print("Hello! I'm CodBot. Type 'bye' to exit.")
+    while True:
+        user_input = input("You: ").lower()
+
+        if user_input in ['hello', 'hi', 'hey']:
+            print("CodBot: Hello! How can I assist you today?")
+        elif 'your name' in user_input:
+            print("CodBot: I'm CodBot, your friendly AI assistant.")
+        elif 'how are you' in user_input:
+            print("CodBot: I'm just code, but I'm running perfectly!")
+        elif 'help' in user_input:
+            print("CodBot: I can chat with you or answer basic questions. Try saying 'hello'!")
+        elif 'bye' in user_input:
+            print("CodBot: Goodbye! Have a great day 😊")
+            break
+        else:
+            print("CodBot: I'm not sure how to respond to that. Try asking something else!")
+
+rule_based_chatbot()
 
