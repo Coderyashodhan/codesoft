@@ -1,1 +1,26 @@
+import pandas as pd
+from sklearn.metrics.pairwise import cosine_similarity
 
+ratings = pd.DataFrame({
+    'user_id': [1, 1, 1, 2, 2, 3, 3],
+    'movie': ['Avengers', 'Iron Man', 'Captain America',
+              'Avengers', 'Thor', 'Iron Man', 'Thor'],
+    'rating': [5, 4, 5, 4, 5, 5, 3]
+})
+
+pivot = ratings.pivot_table(index='user_id', columns='movie', values='rating').fillna(0)
+
+similarity = cosine_similarity(pivot)
+similar_users = pd.DataFrame(similarity, index=pivot.index, columns=pivot.index)
+
+def recommend_collab(user_id, pivot, similarity_matrix):
+    sim_scores = similarity_matrix[user_id].sort_values(ascending=False)
+    top_users = sim_scores.index[1:]
+    similar_users_ratings = pivot.loc[top_users]
+    weighted_sum = similar_users_ratings.T.dot(sim_scores[top_users])
+    normalized = weighted_sum / sim_scores[top_users].sum()
+    already_rated = pivot.loc[user_id][pivot.loc[user_id] > 0].index
+    recommendations = normalized.drop(labels=already_rated).sort_values(ascending=False)
+    return recommendations.head(3)
+
+print("Recommended Movies:", recommend_collab(1, pivot, similar_users))
